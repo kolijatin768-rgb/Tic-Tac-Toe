@@ -1,0 +1,117 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #c77dff;
+    text-align: center;
+}
+
+#heading {
+    font-size: 50px;
+    color:#5a189a;
+    font-family: 'Alfa Slab One', display;
+}
+
+.container {
+    padding: 2rem;
+    height: 70vh;
+    justify-items: center;
+    display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+}
+
+.game {
+    height: 60vmin;
+    width: 60vmin;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5vmin;
+}
+
+.box {
+    height: 18vmin;
+    width: 18vmin;
+    border-radius: 1rem;
+    border: none;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 1);
+    background-color: #e0aaff;
+    color: #5a189a;
+    font-size: 6.5vmin;
+}
+
+#reset_btn {
+    gap: 1rem;
+    padding: 0.7rem;
+    background-color: #e0aaff;
+    color: #5a189a;
+    border-radius: 1rem;
+    border: none;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 1);
+    column-gap: 2rem;
+}
+
+#new-btn {
+  gap: 1rem;
+    padding: 0.7rem;
+    background-color: #e0aaff;
+    color: #5a189a;
+    border-radius: 1rem;
+    border: none;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 1);
+    column-gap: 2rem;
+}
+
+#new_game_btn {
+  gap: 1rem;
+    padding: 0.7rem;
+    background-color: #e0aaff;
+    color: #5a189a;
+    border-radius: 1rem;
+    border: none;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 1);
+    column-gap: 2rem;
+}
+#msg {
+  color: #ffffc7;
+  font-size: 5vmin;
+  font-family: 'Alfa Slab One', display;
+  color:#5a189a;
+}
+
+.msg-container {
+  height: 100vmin;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.hide {
+  display: none;
+}
+
+#footer {
+    padding: 4rem;
+    color:#5a189a;
+}
+
+.social-links img, 
+.social-links i {
+    width: 30px !important;  /* चौड़ाई */
+    height: 30px !important; /* ऊँचाई */
+    margin: 10px !important; /* गैप के लिए */
+    object-fit: contain !important;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
