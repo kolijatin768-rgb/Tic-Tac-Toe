@@ -22,6 +22,25 @@ body {
     100% { background-position: 0% 50%; }
 }
 
+.mode-selector {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+.mode-btn {
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: 1px solid #fff;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    cursor: pointer;
+    font-family: 'Alfa Slab One', cursive;
+}
+.mode-btn.active {
+    background: #5a189a;
+    box-shadow: 0 0 10px #e0aaff;
+}
+
 #turn-display {
     font-family: 'Alfa Slab One', cursive;
     color: #fff;
