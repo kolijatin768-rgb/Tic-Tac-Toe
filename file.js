@@ -5,7 +5,9 @@ let msgContainer = document.querySelector(".msg-container");
 let msg = document.querySelector("#msg");
 const turnIndicator = document.querySelector("#current-player");
 
-let turnO = true; // true for O, false for X
+let turnO = true; 
+let isBotMode = false; // Default is friend mode
+let gameActive = true;
 
 const winPatterns = [
     [0, 1, 2], [0, 3, 6], [0, 4, 8], 
@@ -13,50 +15,108 @@ const winPatterns = [
     [6, 7, 8], [2, 4, 6]
 ];
 
+// Mode Selection Logic
+document.getElementById("bot_mode").addEventListener("click", (e) => {
+    isBotMode = true;
+    e.target.classList.add("active");
+    document.getElementById("friend_mode").classList.remove("active");
+    resetGame();
+});
+
+document.getElementById("friend_mode").addEventListener("click", (e) => {
+    isBotMode = false;
+    e.target.classList.add("active");
+    document.getElementById("bot_mode").classList.remove("active");
+    resetGame();
+});
+
 const resetGame = () => {
     turnO = true;
+    gameActive = true;
     enableBoxes();
     msgContainer.classList.add("hide");
     turnIndicator.innerText = "O";
 };
 
-boxes.forEach((box) => {
+boxes.forEach((box, index) => {
     box.addEventListener("click", () => {
-        if (turnO) {
-            box.innerText = "O";
-            box.style.color = "#ffffff"; 
-            turnIndicator.innerText = "X";
-            turnO = false;
-        } else {
-            box.innerText = "X";
-            box.style.color = "#5a189a"; 
-            turnIndicator.innerText = "O";
-            turnO = true;
+        if (!gameActive || box.innerText !== "") return;
+
+        // Player Move
+        handleMove(box, turnO ? "O" : "X");
+
+        // Bot Move Logic
+        if (isBotMode && gameActive && !turnO) {
+            // Briefly disable board so player can't click during bot "thinking"
+            disableBoxes(); 
+            setTimeout(() => {
+                const botBox = getBestMove();
+                if (botBox) handleMove(botBox, "X");
+                if (gameActive) enableEmptyBoxes();
+            }, 500); 
         }
-        box.disabled = true;
-        checkWinner();
     });
 });
 
-const disableBoxes = () => {
-    for (let box of boxes) {
-        box.disabled = true;
+const handleMove = (box, symbol) => {
+    box.innerText = symbol;
+    box.style.color = symbol === "O" ? "#ffffff" : "#5a189a";
+    box.disabled = true;
+    
+    let win = checkWinner();
+    
+    if (!win) {
+        turnO = !turnO;
+        turnIndicator.innerText = turnO ? "O" : "X";
     }
 };
 
+const getBestMove = () => {
+    // 1. Try to win or block player
+    const move = findStrategyMove("X") || findStrategyMove("O");
+    if (move) return move;
+
+    // 2. Otherwise, pick a random available box
+    const emptyBoxes = Array.from(boxes).filter(b => b.innerText === "");
+    return emptyBoxes[Math.floor(Math.random() * emptyBoxes.length)];
+};
+
+const findStrategyMove = (symbol) => {
+    for (let pattern of winPatterns) {
+        const [a, b, c] = pattern;
+        const vals = [boxes[a].innerText, boxes[b].innerText, boxes[c].innerText];
+        
+        // If two spots are taken by the same symbol and the third is empty
+        if (vals.filter(v => v === symbol).length === 2 && vals.includes("")) {
+            return boxes[pattern[vals.indexOf("")]];
+        }
+    }
+    return null;
+};
+
+const enableEmptyBoxes = () => {
+    boxes.forEach(box => {
+        if (box.innerText === "") box.disabled = false;
+    });
+};
+
+const disableBoxes = () => {
+    boxes.forEach(box => box.disabled = true);
+};
+
 const enableBoxes = () => {
-    for (let box of boxes) {
+    boxes.forEach(box => {
         box.disabled = false;
         box.innerText = "";
-    }
+    });
 };
 
 const showWinner = (winner) => {
     msg.innerText = `Winner is ${winner}!`;
     msgContainer.classList.remove("hide");
+    gameActive = false;
     disableBoxes();
 
-    // Trigger Confetti
     confetti({
         particleCount: 150,
         spread: 70,
@@ -66,30 +126,25 @@ const showWinner = (winner) => {
 };
 
 const checkWinner = () => {
-    let isWin = false;
     for (let pattern of winPatterns) {
-        let pos1Val = boxes[pattern[0]].innerText;
-        let pos2Val = boxes[pattern[1]].innerText;
-        let pos3Val = boxes[pattern[2]].innerText;
+        let p1 = boxes[pattern[0]].innerText;
+        let p2 = boxes[pattern[1]].innerText;
+        let p3 = boxes[pattern[2]].innerText;
 
-        if (pos1Val !== "" && pos1Val === pos2Val && pos2Val === pos3Val) {
-            showWinner(pos1Val);
-            isWin = true;
-            return;
+        if (p1 !== "" && p1 === p2 && p2 === p3) {
+            showWinner(p1);
+            return true;
         }
     }
 
-    // Check for Draw
-    let fillCount = 0;
-    boxes.forEach(box => {
-        if (box.innerText !== "") fillCount++;
-    });
-
-    if (fillCount === 9 && !isWin) {
+    let fillCount = Array.from(boxes).filter(b => b.innerText !== "").length;
+    if (fillCount === 9) {
         msg.innerText = "It's a Draw! 🤝";
         msgContainer.classList.remove("hide");
-        disableBoxes();
+        gameActive = false;
+        return true;
     }
+    return false;
 };
 
 newGameBtn.addEventListener("click", resetGame);
