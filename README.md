@@ -2,7 +2,7 @@
 
 A modern, interactive Tic Tac Toe game featuring **Glassmorphism UI**, a **Smart AI Bot**, and a celebration system. This was built as a final project to showcase front-end development skills using HTML, CSS, and JavaScript.
 
-![Project Preview](https://via.placeholder.com/800x400?text=Tic+Tac+Toe+Project+Preview) ## ✨ Features
+✨ Features
 
 - **Smart AI Bot:** Don't have a partner? Play against a computer that blocks your moves and plays strategically.
 - **Two Game Modes:** Easily toggle between "Vs Friend" and "Vs Bot" modes.
